@@ -42,7 +42,7 @@ Zum Stoppen der Container: `docker compose down`. Die App stoppt ihr separat in 
 | --- | --- | --- |
 | LF8-App | 8080 | REST und Swagger |
 | projekt-db | 5433 | Projekt-PostgreSQL; Webshop kann parallel auf 5432 laufen |
-| auth | 9000 | Stellt JWTs und öffentliche Schlüssel bereit |
+| auth | 9001 | Stellt JWTs und öffentliche Schlüssel bereit |
 | employee | 8089 | Mitarbeiter und Qualifikationen |
 | employee-db | keiner | Datenbank nur im Compose-Netz |
 
