@@ -90,3 +90,15 @@ Docker muss laufen, **`docker compose up` ist für Tests nicht nötig**: Testcon
 | 503 bei der Begrüßung | Employee-Service ist nicht erreichbar, startet noch oder lehnt das Token ab | `docker compose ps` und `docker compose logs employee` prüfen; bei abgelaufenem Token `GetToken.http` erneut ausführen. |
 | 500 mit Spalten-/Constraint-Fehler nach Änderung einer Entity | `ddl-auto=update` lässt alte Datenbankspalten stehen | `docker compose down -v` löscht beide Datenbanken; danach `docker compose up -d`. |
 | Beispieldaten zurücksetzen | Alte Daten liegen in den Volumes | `docker compose down -v` löscht **beide** Datenbanken; anschließend `docker compose up -d`. |
+
+## 10. API
+
+| Methode | URI                           | Request-Body                                                                                     | Statuscode-Erfolg | Statuscode-Fehler                                                         |
+|---------|-------------------------------|--------------------------------------------------------------------------------------------------|-------------------|---------------------------------------------------------------------------|
+| POST    | /projects                     | Description, ProjectLeadID, CustomerID, Contact, ProjectGoal, StartDate, PlannedEndDate, EndDate | Created 201       | Bad Request 400 , Unauthorized 401, Conflict 409, Service Unavailable 503 | 
+| GET     | /projects                     |                                                                                                  | OK 200            | Unauthorized 401, Service Unavailable 503                                 | 
+| GET     | /projects/{id}                |                                                                                                  | OK 200            | Unauthorized 401, Service Unavailable 503                                 |
+| DELETE  | /projects/{id}                |                                                                                                  | OK 200            | Unauthorized 401, Service Unavailable 503, Not Found 404                  |
+| POST    | /projects/{id}/employees      | EmployeeID, ProjectID                                                                            | Created 201       | Bad Request 400 , Unauthorized 401, Conflict 409, Service Unavailable 503 |
+| GET     | /projects/{id}/employees/{id} |                                                                                                  | OK 200            | Unauthorized 401, Service Unavailable 503                                 |
+| GET     | /projects/{id}/employees/     |                                                                                                  | OK 200            | Unauthorized 401, Service Unavailable 503                                 |
