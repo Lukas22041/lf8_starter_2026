@@ -32,4 +32,9 @@ public class ProjectService {
         return repository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException(id));
     }
+
+    public void delete(long id) {
+        ProjectEntity entity = findById(id);
+        repository.delete(entity);
+    }
 }

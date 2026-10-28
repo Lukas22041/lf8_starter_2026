@@ -94,4 +94,22 @@ class ProjectServiceTest {
 
         assertThatThrownBy(() -> service.findById(1L)).isInstanceOf(ProjectNotFoundException.class);
     }
+
+    @Test
+    void deleteRemovesProject() {
+        ProjectEntity entity = createProjectEntity(LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 31));
+        when(repository.findById(1L)).thenReturn(Optional.of(entity));
+
+        service.delete(1L);
+
+        verify(repository).delete(entity);
+    }
+
+    @Test
+    void deleteThrowsWhenProjectDoesNotExist() {
+        when(repository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.delete(1L)).isInstanceOf(ProjectNotFoundException.class);
+        verify(repository, never()).delete(any());
+    }
 }
