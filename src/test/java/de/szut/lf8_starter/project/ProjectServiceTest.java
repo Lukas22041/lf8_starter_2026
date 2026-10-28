@@ -71,4 +71,12 @@ class ProjectServiceTest {
         assertThatThrownBy(() -> service.create(entity)).isInstanceOf(InvalidProjectDatesException.class);
         verify(repository, never()).save(any());
     }
+
+    @Test
+    void findAllReturnsAllProjects() {
+        ProjectEntity entity = createProjectEntity(LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 31));
+        when(repository.findAll()).thenReturn(List.of(entity));
+
+        assertThat(service.findAll()).containsExactly(entity);
+    }
 }

@@ -1,6 +1,7 @@
 package de.szut.lf8_starter.project;
 
 import java.net.URI;
+import java.util.List;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,5 +42,15 @@ public class ProjectController {
                 .toUri();
 
         return ResponseEntity.created(location).body(created);
+    }
+
+    @Operation(summary = "Alle Projekte abrufen")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200"),
+            @ApiResponse(responseCode = "401")
+    })
+    @GetMapping
+    public List<ProjectGetDto> all() {
+        return service.findAll().stream().map(mapper::toDto).toList();
     }
 }

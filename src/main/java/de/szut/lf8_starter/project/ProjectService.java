@@ -1,5 +1,7 @@
 package de.szut.lf8_starter.project;
 
+import java.util.List;
+
 import de.szut.lf8_starter.employee.EmployeeClient;
 import de.szut.lf8_starter.employee.EmployeeNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +22,9 @@ public class ProjectService {
         employees.findById(leadId)
                 .orElseThrow(() -> new EmployeeNotFoundException(leadId));
         return repository.save(entity);
+    }
+
+    public List<ProjectEntity> findAll() {
+        return repository.findAll();
     }
 }
