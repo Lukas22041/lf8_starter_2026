@@ -33,6 +33,21 @@ GET http://localhost:8080/hello/greeting/999
 Authorization: Bearer {{token}}
 
 ###
+POST http://localhost:8080/projects
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "Description": "Neues Projekt",
+  "ProjectLeadID": 1,
+  "CustomerID": 2,
+  "Contact": "Erika Muster",
+  "ProjectGoal": "Migration",
+  "StartDate": "2026-03-01",
+  "PlannedEndDate": "2026-03-31"
+}
+
+###
 GET http://localhost:8089/employees
 Authorization: Bearer {{token}}
 
