@@ -1,6 +1,6 @@
 package de.szut.lf8_starter.project;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,10 +16,10 @@ public record ProjectCreateDto(
         String Contact,
         String ProjectGoal,
         @NotNull(message = "wert muss vorhanden sein")
-        Date StartDate,
+        LocalDate StartDate,
         @NotNull(message = "wert muss vorhanden sein")
-        Date PlannedEndDate,
-        Date EndDate
+        LocalDate PlannedEndDate,
+        LocalDate EndDate
 ) {
 
 }

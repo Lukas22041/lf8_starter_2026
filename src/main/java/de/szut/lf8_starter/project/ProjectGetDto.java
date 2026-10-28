@@ -1,6 +1,6 @@
 package de.szut.lf8_starter.project;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /** DTO for get requests */
 public record ProjectGetDto(
@@ -10,9 +10,9 @@ public record ProjectGetDto(
         Long CustomerID,
         String Contact,
         String ProjectGoal,
-        Date StartDate,
-        Date PlannedEndDate,
-        Date EndDate
+        LocalDate StartDate,
+        LocalDate PlannedEndDate,
+        LocalDate EndDate
 ) {
 
 }
