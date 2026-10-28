@@ -30,6 +30,9 @@ class ProjectServiceTest {
     private ProjectRepository repository;
 
     @Mock
+    private ProjectEmployeeRepository projectEmployees;
+
+    @Mock
     private EmployeeClient employees;
 
     private ProjectEntity createProjectEntity(LocalDate start, LocalDate plannedEnd) {
@@ -93,5 +96,14 @@ class ProjectServiceTest {
         when(repository.findById(1L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.findById(1L)).isInstanceOf(ProjectNotFoundException.class);
+    }
+
+    @Test
+    void findEmployeesReturnsAssignmentsOfProject() {
+        ProjectEntity project = createProjectEntity(LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 31));
+        ProjectEmployeeEntity assignment = new ProjectEmployeeEntity(project, 1L, 3L);
+        when(projectEmployees.findByProject(project)).thenReturn(List.of(assignment));
+
+        assertThat(service.findEmployees(project)).containsExactly(assignment);
     }
 }

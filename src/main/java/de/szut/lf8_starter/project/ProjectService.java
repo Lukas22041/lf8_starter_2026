@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 public class ProjectService {
 
     private final ProjectRepository repository;
+    private final ProjectEmployeeRepository projectEmployees;
     private final EmployeeClient employees;
 
     public ProjectEntity create(ProjectEntity entity) {
@@ -31,5 +32,9 @@ public class ProjectService {
     public ProjectEntity findById(long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException(id));
+    }
+
+    public List<ProjectEmployeeEntity> findEmployees(ProjectEntity project) {
+        return projectEmployees.findByProject(project);
     }
 }
