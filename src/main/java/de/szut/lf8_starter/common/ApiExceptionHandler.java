@@ -6,6 +6,7 @@ import java.util.Map;
 import de.szut.lf8_starter.employee.EmployeeNotFoundException;
 import de.szut.lf8_starter.employee.EmployeeServiceUnavailableException;
 import de.szut.lf8_starter.hello.HelloNotFoundException;
+import de.szut.lf8_starter.project.InvalidProjectDatesException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,11 @@ public class ApiExceptionHandler {
     @ExceptionHandler(EmployeeServiceUnavailableException.class)
     public ProblemDetail unavailable(EmployeeServiceUnavailableException exception) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, exception.getMessage());
+    }
+
+    @ExceptionHandler(InvalidProjectDatesException.class)
+    public ProblemDetail invalidDates(InvalidProjectDatesException exception) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_CONTENT, exception.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
