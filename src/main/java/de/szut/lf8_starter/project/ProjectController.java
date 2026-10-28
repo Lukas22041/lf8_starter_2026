@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,5 +53,16 @@ public class ProjectController {
     @GetMapping
     public List<ProjectGetDto> all() {
         return service.findAll().stream().map(mapper::toDto).toList();
+    }
+
+    @Operation(summary = "Ein Projekt abrufen")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200"),
+            @ApiResponse(responseCode = "401"),
+            @ApiResponse(responseCode = "404")
+    })
+    @GetMapping("/{id}")
+    public ProjectGetDto findById(@PathVariable long id) {
+        return mapper.toDto(service.findById(id));
     }
 }

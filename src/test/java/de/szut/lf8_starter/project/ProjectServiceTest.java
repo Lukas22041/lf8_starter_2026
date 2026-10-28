@@ -79,4 +79,19 @@ class ProjectServiceTest {
 
         assertThat(service.findAll()).containsExactly(entity);
     }
+
+    @Test
+    void findByIdReturnsProject() {
+        ProjectEntity entity = createProjectEntity(LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 31));
+        when(repository.findById(1L)).thenReturn(Optional.of(entity));
+
+        assertThat(service.findById(1L)).isSameAs(entity);
+    }
+
+    @Test
+    void findByIdThrowsWhenProjectDoesNotExist() {
+        when(repository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.findById(1L)).isInstanceOf(ProjectNotFoundException.class);
+    }
 }

@@ -20,11 +20,15 @@ class ProjectGetIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private ProjectRepository repository;
 
+    private ProjectEntity saveProject() {
+        return repository.save(new ProjectEntity("Lagerverwaltung", 1L, 4711L, "Frau Meier",
+                "Altes Lager ablösen", LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 31), null));
+    }
+
     @Test
     void getAllReturns200AndSavedProjects() throws Exception {
         // Arrange
-        ProjectEntity saved = repository.save(new ProjectEntity("Lagerverwaltung", 1L, 4711L, "Frau Meier",
-                "Altes Lager ablösen", LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 31), null));
+        ProjectEntity saved = saveProject();
 
         // Act & Assert
         mockMvc.perform(get("/projects").with(jwt()))
@@ -53,6 +57,40 @@ class ProjectGetIntegrationTest extends AbstractIntegrationTest {
     void getAllWithoutTokenReturns401() throws Exception {
         // Act & Assert
         mockMvc.perform(get("/projects"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void getByIdReturns200() throws Exception {
+        // Arrange
+        ProjectEntity saved = saveProject();
+
+        // Act & Assert
+        mockMvc.perform(get("/projects/{id}", saved.getId()).with(jwt()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ProjectID").value(saved.getId()))
+                .andExpect(jsonPath("$.Description").value("Lagerverwaltung"))
+                .andExpect(jsonPath("$.ProjectLeadID").value(1))
+                .andExpect(jsonPath("$.CustomerID").value(4711))
+                .andExpect(jsonPath("$.Contact").value("Frau Meier"))
+                .andExpect(jsonPath("$.ProjectGoal").value("Altes Lager ablösen"))
+                .andExpect(jsonPath("$.StartDate").value("2026-03-01"))
+                .andExpect(jsonPath("$.PlannedEndDate").value("2026-03-31"))
+                .andExpect(jsonPath("$.EndDate").isEmpty());
+    }
+
+    @Test
+    void getByIdUnknownReturns404() throws Exception {
+        // Act & Assert
+        mockMvc.perform(get("/projects/999999").with(jwt()))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.detail").value("Projekt 999999 nicht gefunden"));
+    }
+
+    @Test
+    void getByIdWithoutTokenReturns401() throws Exception {
+        // Act & Assert
+        mockMvc.perform(get("/projects/1"))
                 .andExpect(status().isUnauthorized());
     }
 }

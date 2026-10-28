@@ -51,6 +51,10 @@ Content-Type: application/json
 GET http://localhost:8080/projects
 Authorization: Bearer {{token}}
 
+### ID aus der POST-Antwort einsetzen.
+GET http://localhost:8080/projects/1
+Authorization: Bearer {{token}}
+
 ###
 GET http://localhost:8089/employees
 Authorization: Bearer {{token}}

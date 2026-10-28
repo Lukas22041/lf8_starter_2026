@@ -27,4 +27,9 @@ public class ProjectService {
     public List<ProjectEntity> findAll() {
         return repository.findAll();
     }
+
+    public ProjectEntity findById(long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ProjectNotFoundException(id));
+    }
 }
