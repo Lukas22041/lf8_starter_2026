@@ -56,6 +56,10 @@ GET http://localhost:8080/projects/1
 Authorization: Bearer {{token}}
 
 ### ID aus der POST-Antwort einsetzen.
+GET http://localhost:8080/projects/1/employees
+Authorization: Bearer {{token}}
+
+### ID aus der POST-Antwort einsetzen.
 DELETE http://localhost:8080/projects/1
 Authorization: Bearer {{token}}
 

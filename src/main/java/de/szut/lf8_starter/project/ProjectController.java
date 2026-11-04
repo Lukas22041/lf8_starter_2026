@@ -67,6 +67,18 @@ public class ProjectController {
         return mapper.toDto(service.findById(id));
     }
 
+    @Operation(summary = "Mitarbeiter eines Projekts abrufen")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200"),
+            @ApiResponse(responseCode = "401"),
+            @ApiResponse(responseCode = "404")
+    })
+    @GetMapping("/{id}/employees")
+    public ProjectWithEmployeesGetDto findEmployees(@PathVariable long id) {
+        ProjectEntity project = service.findById(id);
+        return mapper.toWithEmployeesDto(project, service.findEmployees(project));
+    }
+
     @Operation(summary = "Projekt löschen")
     @ApiResponses({
         @ApiResponse(responseCode = "200"),
