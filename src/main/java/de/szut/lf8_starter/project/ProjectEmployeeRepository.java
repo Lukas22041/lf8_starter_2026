@@ -2,6 +2,7 @@ package de.szut.lf8_starter.project;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 public interface ProjectEmployeeRepository extends JpaRepository<ProjectEmployeeEntity, Long> {
 
     List<ProjectEmployeeEntity> findByProject(ProjectEntity project);
+
+    Optional<ProjectEmployeeEntity> findByProjectAndEmployeeId(ProjectEntity project, long employeeId);
 
     boolean existsByProjectAndEmployeeId(ProjectEntity project, Long employeeId);
 

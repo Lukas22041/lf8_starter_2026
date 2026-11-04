@@ -60,4 +60,14 @@ public class ProjectService {
         ProjectEntity entity = findById(id);
         repository.delete(entity);
     }
+
+    public ProjectEmployeeEntity findEmployee(long projectId, long employeeId) {
+        ProjectEntity project = findById(projectId);          // 404: Projekt gibt es nicht
+
+        employees.findById(employeeId)                       // 404: Mitarbeiter gibt es nicht
+            .orElseThrow(() -> new EmployeeNotFoundException(employeeId)); // 503: Dienst weg
+
+        return projectEmployees.findByProjectAndEmployeeId(project, employeeId)
+            .orElseThrow(() -> new ProjectEmployeeNotFoundException(projectId, employeeId)); // 404
+    }
 }

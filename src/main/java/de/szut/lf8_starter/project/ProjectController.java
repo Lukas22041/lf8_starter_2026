@@ -93,7 +93,7 @@ public class ProjectController {
     public ResponseEntity<ProjectEmployeeGetDto> addEmployee(@PathVariable long id,
             @Valid @RequestBody ProjectEmployeeCreateDto dto) {
         ProjectEntity project = service.findById(id);
-        ProjectEmployeeGetDto created = mapper.toDto(
+        ProjectEmployeeGetDto created = mapper.toEmployeeDto(
                 service.addEmployee(project, dto.employeeId(), dto.qualificationId()));
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
 
@@ -110,5 +110,17 @@ public class ProjectController {
     public ResponseEntity<Void> delete(@PathVariable long id) {
         service.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Einen Mitarbeiter eines Projekts abrufen")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200"),
+        @ApiResponse(responseCode = "401"),
+        @ApiResponse(responseCode = "404"),
+        @ApiResponse(responseCode = "503")
+    })
+    @GetMapping("/{projectId}/employees/{employeeId}")
+    public ProjectEmployeeGetDto findEmployee(@PathVariable long projectId, @PathVariable long employeeId) {
+        return mapper.toEmployeeDto(service.findEmployee(projectId, employeeId));
     }
 }

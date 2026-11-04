@@ -19,11 +19,11 @@ public class ProjectMapper {
     }
 
     public ProjectWithEmployeesGetDto toWithEmployeesDto(ProjectEntity project, List<ProjectEmployeeEntity> employees) {
-        List<ProjectEmployeeGetDto> employeeDtos = employees.stream().map(this::toDto).toList();
+        List<ProjectEmployeeGetDto> employeeDtos = employees.stream().map(this::toEmployeeDto).toList();
         return new ProjectWithEmployeesGetDto(project.getId(), project.getDescription(), employeeDtos);
     }
 
-    public ProjectEmployeeGetDto toDto(ProjectEmployeeEntity entity) {
+    public ProjectEmployeeGetDto toEmployeeDto(ProjectEmployeeEntity entity) {
         return new ProjectEmployeeGetDto(entity.getEmployeeId(), entity.getQualificationId());
     }
 }
