@@ -24,4 +24,8 @@ public class ProjectMapper {
                 .toList();
         return new ProjectWithEmployeesGetDto(project.getId(), project.getDescription(), employeeDtos);
     }
+
+    public ProjectEmployeeGetDto toEmployeeDto(ProjectEmployeeEntity entity) {
+        return new ProjectEmployeeGetDto(entity.getEmployeeId(), entity.getQualificationId());
+    }
 }

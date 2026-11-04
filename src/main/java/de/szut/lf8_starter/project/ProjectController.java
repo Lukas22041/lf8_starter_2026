@@ -90,4 +90,16 @@ public class ProjectController {
         service.delete(id);
         return ResponseEntity.ok().build();
     }
+
+    @Operation(summary = "Einen Mitarbeiter eines Projekts abrufen")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200"),
+        @ApiResponse(responseCode = "401"),
+        @ApiResponse(responseCode = "404"),
+        @ApiResponse(responseCode = "503")
+    })
+    @GetMapping("/{projectId}/employees/{employeeId}")
+    public ProjectEmployeeGetDto findEmployee(@PathVariable long projectId, @PathVariable long employeeId) {
+        return mapper.toEmployeeDto(service.findEmployee(projectId, employeeId));
+    }
 }

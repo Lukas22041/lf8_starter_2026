@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ApiExceptionHandler {
 
     @ExceptionHandler({HelloNotFoundException.class, EmployeeNotFoundException.class,
-            ProjectNotFoundException.class})
+            ProjectNotFoundException.class, ProjectNotFoundException.class})
     public ProblemDetail notFound(RuntimeException exception) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());
     }
