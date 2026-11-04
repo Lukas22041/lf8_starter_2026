@@ -59,6 +59,16 @@ Authorization: Bearer {{token}}
 GET http://localhost:8080/projects/1/employees
 Authorization: Bearer {{token}}
 
+### Projekt-ID aus der POST-Antwort einsetzen; Qualifikations-ID aus GET /employees/1 (skillSet).
+POST http://localhost:8080/projects/1/employees
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "employeeId": 1,
+  "qualificationId": 1
+}
+
 ### ID aus der POST-Antwort einsetzen.
 DELETE http://localhost:8080/projects/1
 Authorization: Bearer {{token}}

@@ -6,7 +6,10 @@ import java.util.Map;
 import de.szut.lf8_starter.employee.EmployeeNotFoundException;
 import de.szut.lf8_starter.employee.EmployeeServiceUnavailableException;
 import de.szut.lf8_starter.hello.HelloNotFoundException;
+import de.szut.lf8_starter.project.EmployeeAlreadyAssignedException;
+import de.szut.lf8_starter.project.EmployeeNotAvailableException;
 import de.szut.lf8_starter.project.InvalidProjectDatesException;
+import de.szut.lf8_starter.project.MissingQualificationException;
 import de.szut.lf8_starter.project.ProjectNotFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -35,9 +38,14 @@ public class ApiExceptionHandler {
         return ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, exception.getMessage());
     }
 
-    @ExceptionHandler(InvalidProjectDatesException.class)
-    public ProblemDetail invalidDates(InvalidProjectDatesException exception) {
+    @ExceptionHandler({InvalidProjectDatesException.class, MissingQualificationException.class})
+    public ProblemDetail unprocessable(RuntimeException exception) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_CONTENT, exception.getMessage());
+    }
+
+    @ExceptionHandler({EmployeeAlreadyAssignedException.class, EmployeeNotAvailableException.class})
+    public ProblemDetail conflict(RuntimeException exception) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, exception.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

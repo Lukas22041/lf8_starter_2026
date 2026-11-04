@@ -14,6 +14,7 @@ import java.util.Optional;
 import de.szut.lf8_starter.employee.EmployeeClient;
 import de.szut.lf8_starter.employee.EmployeeDto;
 import de.szut.lf8_starter.employee.EmployeeNotFoundException;
+import de.szut.lf8_starter.employee.QualificationDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -123,5 +124,66 @@ class ProjectServiceTest {
 
         assertThatThrownBy(() -> service.delete(1L)).isInstanceOf(ProjectNotFoundException.class);
         verify(repository, never()).delete(any());
+    }
+
+    private void employeeKnowsJava() {
+        when(employees.findById(1L)).thenReturn(Optional.of(
+                new EmployeeDto(1L, "Max", "Mustermann", List.of(new QualificationDto(3L, "Java")))));
+    }
+
+    @Test
+    void addEmployeeSavesAssignment() {
+        ProjectEntity project = createProjectEntity(LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 31));
+        employeeKnowsJava();
+        when(projectEmployees.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ProjectEmployeeEntity saved = service.addEmployee(project, 1L, 3L);
+
+        assertThat(saved.getProject()).isSameAs(project);
+        assertThat(saved.getEmployeeId()).isEqualTo(1L);
+        assertThat(saved.getQualificationId()).isEqualTo(3L);
+    }
+
+    @Test
+    void addEmployeeThrowsWhenEmployeeDoesNotExist() {
+        ProjectEntity project = createProjectEntity(LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 31));
+        when(employees.findById(1L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.addEmployee(project, 1L, 3L)).isInstanceOf(EmployeeNotFoundException.class);
+        verify(projectEmployees, never()).save(any());
+    }
+
+    @Test
+    void addEmployeeThrowsWhenAlreadyAssigned() {
+        ProjectEntity project = createProjectEntity(LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 31));
+        project.setId(5L);
+        employeeKnowsJava();
+        when(projectEmployees.existsByProjectAndEmployeeId(project, 1L)).thenReturn(true);
+
+        assertThatThrownBy(() -> service.addEmployee(project, 1L, 3L))
+                .isInstanceOf(EmployeeAlreadyAssignedException.class);
+        verify(projectEmployees, never()).save(any());
+    }
+
+    @Test
+    void addEmployeeThrowsWhenQualificationIsMissing() {
+        ProjectEntity project = createProjectEntity(LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 31));
+        employeeKnowsJava();
+
+        assertThatThrownBy(() -> service.addEmployee(project, 1L, 99L))
+                .isInstanceOf(MissingQualificationException.class);
+        verify(projectEmployees, never()).save(any());
+    }
+
+    @Test
+    void addEmployeeThrowsWhenEmployeeIsNotAvailable() {
+        ProjectEntity project = createProjectEntity(LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 31));
+        employeeKnowsJava();
+        when(projectEmployees.isEmployeePlannedBetween(1L, LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 31)))
+                .thenReturn(true);
+
+        assertThatThrownBy(() -> service.addEmployee(project, 1L, 3L))
+                .isInstanceOf(EmployeeNotAvailableException.class);
+        verify(projectEmployees, never()).save(any());
     }
 }

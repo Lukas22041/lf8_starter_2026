@@ -79,6 +79,27 @@ public class ProjectController {
         return mapper.toWithEmployeesDto(project, service.findEmployees(project));
     }
 
+    @Operation(summary = "Mitarbeiter einem Projekt zuordnen")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201"),
+            @ApiResponse(responseCode = "400"),
+            @ApiResponse(responseCode = "401"),
+            @ApiResponse(responseCode = "404"),
+            @ApiResponse(responseCode = "409"),
+            @ApiResponse(responseCode = "422"),
+            @ApiResponse(responseCode = "503")
+    })
+    @PostMapping("/{id}/employees")
+    public ResponseEntity<ProjectEmployeeGetDto> addEmployee(@PathVariable long id,
+            @Valid @RequestBody ProjectEmployeeCreateDto dto) {
+        ProjectEntity project = service.findById(id);
+        ProjectEmployeeGetDto created = mapper.toDto(
+                service.addEmployee(project, dto.employeeId(), dto.qualificationId()));
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
+
+        return ResponseEntity.created(location).body(created);
+    }
+
     @Operation(summary = "Projekt löschen")
     @ApiResponses({
         @ApiResponse(responseCode = "200"),

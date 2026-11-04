@@ -3,6 +3,7 @@ package de.szut.lf8_starter.project;
 import java.util.List;
 
 import de.szut.lf8_starter.employee.EmployeeClient;
+import de.szut.lf8_starter.employee.EmployeeDto;
 import de.szut.lf8_starter.employee.EmployeeNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,23 @@ public class ProjectService {
 
     public List<ProjectEmployeeEntity> findEmployees(ProjectEntity project) {
         return projectEmployees.findByProject(project);
+    }
+
+    public ProjectEmployeeEntity addEmployee(ProjectEntity project, long employeeId, long qualificationId) {
+        EmployeeDto employee = employees.findById(employeeId)
+                .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
+        if (projectEmployees.existsByProjectAndEmployeeId(project, employeeId)) {
+            throw new EmployeeAlreadyAssignedException(employeeId, project.getId());
+        }
+        boolean qualified = employee.skillSet().stream()
+                .anyMatch(qualification -> qualification.id() == qualificationId);
+        if (!qualified) {
+            throw new MissingQualificationException(employeeId, qualificationId);
+        }
+        if (projectEmployees.isEmployeePlannedBetween(employeeId, project.getStartDate(), project.getPlannedEndDate())) {
+            throw new EmployeeNotAvailableException(employeeId);
+        }
+        return projectEmployees.save(new ProjectEmployeeEntity(project, employeeId, qualificationId));
     }
 
     public void delete(long id) {
